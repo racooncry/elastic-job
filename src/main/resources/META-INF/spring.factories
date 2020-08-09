@@ -1,1 +1,3 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=com.shenfeng.autoconfig.ZookeeperAutoConfig,com.shenfeng.autoconfig.SimpleJobAutoConfig,com.shenfeng.autoconfig.DataflowJobAutoConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=\
+  com.shenfeng.autoconfig.ZookeeperAutoConfig,\
+  com.shenfeng.autoconfig.SimpleJobAutoConfig

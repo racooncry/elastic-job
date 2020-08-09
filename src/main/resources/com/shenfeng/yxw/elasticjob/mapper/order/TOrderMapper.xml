@@ -1,20 +1,46 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.shenfeng.yxw.elasticjob.dao.order.TOrderMapper">
-  <resultMap id="BaseResultMap" type="com.shenfeng.yxw.elasticjob.domain.entity.order.TOrder">
-    <!--
-      WARNING - @mbg.generated
-    -->
-    <id column="id" jdbcType="INTEGER" property="id" />
-    <result column="amount" jdbcType="DECIMAL" property="amount" />
-    <result column="status" jdbcType="INTEGER" property="status" />
-    <result column="receive_name" jdbcType="VARCHAR" property="receiveName" />
-    <result column="receive_address" jdbcType="VARCHAR" property="receiveAddress" />
-    <result column="receive_mobile" jdbcType="VARCHAR" property="receiveMobile" />
-    <result column="receive_user" jdbcType="VARCHAR" property="receiveUser" />
-    <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
-    <result column="create_user" jdbcType="VARCHAR" property="createUser" />
-    <result column="update_user" jdbcType="VARCHAR" property="updateUser" />
-    <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
-  </resultMap>
+    <resultMap id="BaseResultMap" type="com.shenfeng.yxw.elasticjob.domain.entity.order.TOrder">
+        <!--
+          WARNING - @mbg.generated
+        -->
+        <id column="id" jdbcType="INTEGER" property="id"/>
+        <result column="amount" jdbcType="DECIMAL" property="amount"/>
+        <result column="status" jdbcType="INTEGER" property="status"/>
+        <result column="receive_name" jdbcType="VARCHAR" property="receiveName"/>
+        <result column="receive_address" jdbcType="VARCHAR" property="receiveAddress"/>
+        <result column="receive_mobile" jdbcType="VARCHAR" property="receiveMobile"/>
+        <result column="receive_user" jdbcType="VARCHAR" property="receiveUser"/>
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime"/>
+        <result column="create_user" jdbcType="VARCHAR" property="createUser"/>
+        <result column="update_user" jdbcType="VARCHAR" property="updateUser"/>
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime"/>
+    </resultMap>
+
+    <sql id="Base_Column_List">
+id,amount,status,receive_name,receive_address,receive_mobile,receive_user,create_time,create_user,update_user,update_time
+    </sql>
+    <update id="cancelOrder">
+        update t_order set
+        status = #{param3},
+        update_user = #{param4},
+        update_time = #{param5}
+        <where>
+            id = #{param1}
+            and update_time = #{param2}
+        </where>
+    </update>
+
+
+    <select id="getOrder" resultMap="BaseResultMap">
+        select
+        <include refid="Base_Column_List"/>
+        from t_order
+        <where>
+            create_time &lt; #{param1}
+            and status = 1
+            and id % #{param2} = #{param3}
+        </where>
+    </select>
 </mapper>

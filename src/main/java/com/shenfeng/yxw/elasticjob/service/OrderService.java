@@ -8,7 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 @Service
 @Slf4j
@@ -37,5 +39,11 @@ public class OrderService {
 
     }
 
+    public List<TOrder> getOrder(Calendar now, int shardingToalCount, int shadingItem) {
+        return orderMapper.getOrder(now.getTime(), shardingToalCount, shadingItem);
+    }
 
+    public void cancelOrder(Integer id, Date updateTime, int status, String updateUser, Date updateNow) {
+            orderMapper.cancelOrder(id,updateTime,status,updateUser,updateNow);
+    }
 }
