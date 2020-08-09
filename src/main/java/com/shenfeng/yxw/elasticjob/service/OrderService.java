@@ -1,16 +1,24 @@
 package com.shenfeng.yxw.elasticjob.service;
 
+import com.shenfeng.yxw.elasticjob.dao.allOrder.AllOrderMapper;
+import com.shenfeng.yxw.elasticjob.dao.jdOrder.JdOrderMapper;
 import com.shenfeng.yxw.elasticjob.dao.order.TOrderMapper;
+import com.shenfeng.yxw.elasticjob.dao.tmallOrder.TmallOrderMapper;
+import com.shenfeng.yxw.elasticjob.domain.entity.allOrder.AllOrder;
+import com.shenfeng.yxw.elasticjob.domain.entity.jdOrder.JdOrder;
 import com.shenfeng.yxw.elasticjob.domain.entity.order.TOrder;
+import com.shenfeng.yxw.elasticjob.domain.entity.tmallOrder.TmallOrder;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.Random;
 
 @Service
 @Slf4j
@@ -18,6 +26,9 @@ import java.util.List;
 public class OrderService {
 
     private final TOrderMapper orderMapper;
+    private final JdOrderMapper jdOrderMapper;
+    private final TmallOrderMapper tmallOrderMapper;
+    private final AllOrderMapper allOrderMapper;
 
     public int create() {
         Date date = new Date();
@@ -44,6 +55,83 @@ public class OrderService {
     }
 
     public void cancelOrder(Integer id, Date updateTime, int status, String updateUser, Date updateNow) {
-            orderMapper.cancelOrder(id,updateTime,status,updateUser,updateNow);
+        orderMapper.cancelOrder(id, updateTime, status, updateUser, updateNow);
     }
+
+    public void produceThirdOrder() {
+        Date date = new Date();
+        for (int i = 0; i < 5; i++) {
+            Random random = new Random();
+            int nextInt = random.nextInt(2);
+            if (nextInt == 0) {
+                // 京东订单
+                JdOrder jdOrder = JdOrder.builder()
+                        .createTime(date)
+                        .createUser("jdUser")
+                        // 未抓取
+                        .status(0)
+                        .amount(BigDecimal.TEN)
+                        .updateUser("jdUser")
+                        .updateTime(date)
+                        .build();
+//                log.info("插入京东订单");
+                jdOrderMapper.insertSelective(jdOrder);
+            } else {
+                // 天猫订单
+                TmallOrder tmallOrder = TmallOrder.builder()
+                        .createTime(date)
+                        .createUser("tmallUser")
+                        // 未抓取
+                        .orderStatus(0)
+                        .money(BigDecimal.TEN)
+                        .updateUser("tmallUser")
+                        .updateTime(date)
+                        .build();
+//                log.info("插入天猫订单");
+                tmallOrderMapper.insertSelective(tmallOrder);
+            }
+        }
+    }
+
+
+    public List<JdOrder> getJdNotFetchedOrder(int cnt) {
+        List<JdOrder> notFetchedOrder = jdOrderMapper.getNotFetchedOrder(cnt);
+        return notFetchedOrder;
+    }
+
+
+    public List<TmallOrder> getTmallNotFetchedOrder(int cnt) {
+        List<TmallOrder> notFetchedOrder = tmallOrderMapper.getNotFetchedOrder(cnt);
+        return notFetchedOrder;
+    }
+
+
+    @Transactional
+    public void processJdOrder(AllOrder allOrder) {
+        allOrderMapper.insertSelective(allOrder);
+
+        JdOrder jdOrder = JdOrder.builder()
+                .id(allOrder.getThirdOrderId())
+                // 已抓取
+                .status(1)
+                .updateUser("system")
+                .updateTime(new Date())
+                .build();
+        jdOrderMapper.updateByPrimaryKey(jdOrder);
+    }
+
+    @Transactional
+    public void processTmallOrder(AllOrder allOrder) {
+        allOrderMapper.insertSelective(allOrder);
+
+        TmallOrder tmallOrder = TmallOrder.builder()
+                .id(allOrder.getThirdOrderId())
+                // 已抓取
+                .orderStatus(1)
+                .updateUser("system")
+                .updateTime(new Date())
+                .build();
+        tmallOrderMapper.updateByPrimaryKey(tmallOrder);
+    }
+
 }

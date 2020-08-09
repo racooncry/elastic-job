@@ -14,11 +14,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Slf4j
-@ElasticDataflowJob(jobName = "myDataflowJob",
-        cron = "0/10 * * * * ?",
-        shardingTotalCount = 2,
-        overwrite = true,
-        streamProcess = true)
+//@ElasticDataflowJob(jobName = "myDataflowJob",
+//        cron = "0/10 * * * * ?",
+//        shardingTotalCount = 2,
+//        overwrite = true,
+//        streamProcess = true)
 public class MyDataflowJob implements DataflowJob<Order> {
 
     private List<Order> orders = new ArrayList<>();

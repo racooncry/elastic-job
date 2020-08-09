@@ -12,10 +12,10 @@ import org.springframework.stereotype.Component;
 import java.time.LocalTime;
 
 @Slf4j
-@ElasticSimpleJob(jobName = "mySimpleJob",
-        cron = "0/5 * * * * ?",
-        shardingTotalCount = 1,
-        overwrite = true)
+//@ElasticSimpleJob(jobName = "mySimpleJob",
+//        cron = "0/5 * * * * ?",
+//        shardingTotalCount = 1,
+//        overwrite = true)
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 public class MySimpleJob implements SimpleJob {
     private final OrderService orderService;

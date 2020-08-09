@@ -1,6 +1,8 @@
 package com.shenfeng.yxw.elasticjob;
 
+import com.shenfeng.yxw.elasticjob.domain.entity.jdOrder.JdOrder;
 import com.shenfeng.yxw.elasticjob.domain.entity.order.TOrder;
+import com.shenfeng.yxw.elasticjob.domain.entity.tmallOrder.TmallOrder;
 import com.shenfeng.yxw.elasticjob.service.OrderService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -33,5 +35,25 @@ class ElasticJobApplicationTests {
         log.info("ids:{}", integers);
     }
 
+
+    @Test
+    void createThirdOrder() {
+        orderService.produceThirdOrder();
+    }
+
+
+    @Test
+    void getJdOrder() {
+        List<JdOrder> notFetchedOrder =
+                orderService.getJdNotFetchedOrder(5);
+        log.info("list data:{}", notFetchedOrder);
+    }
+
+    @Test
+    void getTmallOrder() {
+        List<TmallOrder> notFetchedOrder =
+                orderService.getTmallNotFetchedOrder(5);
+        log.info("list data:{}", notFetchedOrder);
+    }
 
 }

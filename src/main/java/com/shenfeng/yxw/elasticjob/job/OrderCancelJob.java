@@ -19,10 +19,10 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor(onConstructor = @__(@Autowired))
 @Slf4j
-@ElasticSimpleJob(jobName = "orderCancelJob",
-        cron = "0/15 * * * * ?",
-        shardingTotalCount = 2,
-        overwrite = true)
+//@ElasticSimpleJob(jobName = "orderCancelJob",
+//        cron = "0/15 * * * * ?",
+//        shardingTotalCount = 2,
+//        overwrite = true)
 public class OrderCancelJob implements SimpleJob {
     private final OrderService orderService;
 

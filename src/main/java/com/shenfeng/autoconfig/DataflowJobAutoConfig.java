@@ -1,5 +1,6 @@
 package com.shenfeng.autoconfig;
 
+import com.dangdang.ddframe.job.api.ElasticJob;
 import com.dangdang.ddframe.job.api.dataflow.DataflowJob;
 import com.dangdang.ddframe.job.api.simple.SimpleJob;
 import com.dangdang.ddframe.job.config.JobCoreConfiguration;
@@ -7,6 +8,7 @@ import com.dangdang.ddframe.job.config.dataflow.DataflowJobConfiguration;
 import com.dangdang.ddframe.job.config.simple.SimpleJobConfiguration;
 import com.dangdang.ddframe.job.lite.api.JobScheduler;
 import com.dangdang.ddframe.job.lite.config.LiteJobConfiguration;
+import com.dangdang.ddframe.job.lite.spring.api.SpringJobScheduler;
 import com.dangdang.ddframe.job.reg.base.CoordinatorRegistryCenter;
 import com.shenfeng.yxw.elasticjob.job.MyDataflowJob;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,7 +64,8 @@ public class DataflowJobAutoConfig {
                             .newBuilder(dataflowJob)
                             .overwrite(overwrite)
                             .build();
-                    new JobScheduler(zkCenter, liteJobConfiguration).init();
+//                    new JobScheduler(zkCenter, liteJobConfiguration).init();
+                    new SpringJobScheduler((ElasticJob) instance, zkCenter, liteJobConfiguration).init();
                 }
             }
         }
